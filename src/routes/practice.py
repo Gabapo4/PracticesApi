@@ -1,4 +1,4 @@
-from flask import Blueprint
+from flask import Blueprint, request
 from models.practice import Practice, PracticeSchema
 from .generic import get_all, get_by_id, add, update, delete
 from middleware.token_middleware import verify_token_middleware
@@ -6,6 +6,16 @@ from middleware.token_middleware import verify_token_middleware
 practices = Blueprint('practices', __name__)
 route="/practice"
 fields=["name","description","code","public","image","user_id"]
+
+from flask import jsonify
+import json
+def response(status,data=None,message=None,error=None):
+    return  jsonify({
+        "status":status,
+        "data":data,
+        "message":message,
+        "error":error
+        })
 
 @practices.route(route)
 def index():
@@ -19,7 +29,6 @@ def get_practice_by_id(id):
     return get_by_id(id, Practice,PracticeSchema)
 
 @practices.route(route+"/add", methods=["POST"])
-@verify_token_middleware
 def add_practice():
     return add(Practice, fields)
 
@@ -29,7 +38,6 @@ def update_practice(id):
     return update(id, Practice, fields)
     
 @practices.route(route+"/delete/<id>", methods=['DELETE'])
-@verify_token_middleware
 def delete_practice(id):
     return delete(id, Practice)
 

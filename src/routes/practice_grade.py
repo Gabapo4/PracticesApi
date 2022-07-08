@@ -1,6 +1,6 @@
 from flask import Blueprint
 from models.practice_grade import PracticeGrade, PracticeGradeSchema
-from .generic import get_all, get_by_id, add, update, delete
+from .generic import get_all, get_by_id, add, update, delete, deleteByPracticeId
 from middleware.token_middleware import verify_token_middleware
 
 practiceGrades = Blueprint('practiceGrades', __name__)
@@ -19,7 +19,6 @@ def get_practiceGrade_by_id(id):
     return get_by_id(id, PracticeGrade,PracticeGradeSchema)
 
 @practiceGrades.route(route+"/add", methods=["POST"])
-@verify_token_middleware
 def add_practiceGrade():
     return add(PracticeGrade, fields)
 
@@ -33,3 +32,7 @@ def update_practiceGrade(id):
 def delete_practiceGrade(id):
     return delete(id, PracticeGrade)
 
+#Querys Especiales
+@practiceGrades.route(route+"/deleteAllById/<id>", methods=['DELETE'])
+def delete_practiceGradeAllById(id):
+    return deleteByPracticeId(id, PracticeGrade)
